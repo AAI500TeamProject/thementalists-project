@@ -1,0 +1,144 @@
+\section{Exploratory Data Analysis (EDA)}
+\label{sec:eda} %Label of the chapter lit rev. The key ``ch:lit_rev'' can be used with command \ref{ch:eda} to refer this Chapter.
+
+Exploratory data analysis (EDA) is a crucial initial step in the data analysis process, with the aim of understanding the structure, quality, and overall characteristics of the data set. In this project, the main focus of the EDA was on the prevalence of mental disorders (dataset 1), with additional analysis conducted on the burden of disease caused by each disorder (dataset 2). The analysis process includes data cleaning, format standardization, handling missing data and outliers, and exploring relationships between variables using descriptive statistics and visualization methods (Agresti \& Kateri, 2022).
+
+Through tools such as box plots and heatmaps, EDA helps clarify important data patterns and correlations between types of mental disorders, as well as assess the completeness and stability of the information. Thorough data preparation during the exploratory data analysis (EDA) phase not only aids in selecting the appropriate model for the subsequent analysis steps but also ensures the reliability and accuracy of the final findings.
+
+In addition to standard exploratory data analysis steps, such as data cleaning and handling missing values, the Universal Health Coverage (UHC) dataset was transformed from a wide format to a long format to facilitate time-series analysis. The mental health and UHC datasets were merged by aligning country names and years, resulting in a unified dataset for integrated analysis. Only records with complete UHC data were retained to ensure data quality. Furthermore, year-by-year analyses were conducted to examine the relationship between health coverage and mental health outcomes over time. Visualizations, including scatter plots and regression plots, were created to illustrate trends across countries and years, providing deeper insights beyond simple cross-sectional descriptions.
+
+\subsection{The Data Cleaning and Processing}
+Data cleaning and processing are performed systematically to prepare the data for EDA analysis (Agresti \& Kateri, 2022).
+\subsubsection{Key steps:}
+\begin{itemize}
+    \item Download CSV datasets from GitHub using an automated script.
+    \item Remove unnecessary columns, such as Code, that contain many empty values.
+    \item Rename columns with long or complex titles to short and easy-to-understand names.
+    \item Normalize column names, convert all letters to lowercase, and replace spaces with underscores.
+    \item Remove extra spaces in string values.
+    \item Explicitly convert data columns to numeric types using \texttt{pd.to\_numeric} from the \texttt{pandas} library, treating invalid values as missing.
+    \item Count and identify missing values.
+    \item Reshape UHC data from wide to long format.
+    \item Filter out rows with missing UHC values.
+    \item Convert year columns to numeric and integer types.
+    \item Merge datasets on entity and year.
+\end{itemize}
+
+\subsection{Datasets Introduction}
+
+This dataset consists of 7 small datasets:
+
+\begin{itemize}
+   \item \textbf{Dataset 1: Prevalence of Mental Illness} – This dataset serves as the primary foundation for our analysis, offering comprehensive information on the prevalence of various mental illnesses in different population groups, regions, and countries. It plays a central role in highlighting the occurrence of mental disorders, including direct statistics on eating disorders, which help identify prevalence rates and affected populations. The insights drawn from this dataset are essential for building predictive models that incorporate risk factors and the distribution of these conditions.
+   
+   \item \textbf{Dataset 2: Burden of Disease from Mental Illness} – This dataset presents information on the burden of disease caused by mental illness, typically measured in Disability-Adjusted Life Years (DALY). It measures the overall impact of mental illness on individual health, society, and the economy. Eating disorders have a profound impact on an individual's quality of life, productivity, and overall health. This dataset helps quantify those impacts and improve analysis by linking prevalence data to health and social outcomes.
+
+   \item \textbf{Datasets 3 and 4 (Adult Population Covered in Primary Data)} – These datasets focus on the coverage of research data rather than directly providing information on disease prevalence or impact. Therefore, they are not directly relevant to the analysis of eating disorders.
+
+   \item \textbf{Dataset 5 (Anxiety Disorders Treatment Gap)} – Although relevant to mental health, this dataset focuses on anxiety disorders and access to treatment, so it is less directly relevant to eating disorders.
+
+   \item \textbf{Dataset 6 (Depressive Symptoms in US Population)} – This dataset focuses on depressive symptoms, not specifically on eating disorders, so it is not directly relevant to the purpose of this study.
+
+   \item \textbf{Dataset 7 (Countries with Primary Data on Mental Illnesses)} – This dataset focuses on data availability and collection mechanisms rather than providing detailed information about eating disorders or health impacts.
+
+   \item \textbf{Universal Health Coverage (UHC) Dataset} – This dataset provides annual country-level scores that measure the accessibility and quality of essential health services worldwide. It was used to test whether countries with better healthcare systems exhibit lower rates of depression and other disorders. To analyze this relationship, we harmonized the datasets containing major depression data with the UHC dataset.
+
+   \item \textbf{Note:} The dataset file is named \verb|GDP.csv|, but it actually contains Universal Health Coverage (UHC) data used for analyzing healthcare accessibility.
+\end{itemize}
+
+\subsection {Univariate Analysis} 
+    
+The univariate analysis in the project focuses mainly on handling missing data and outliers to ensure the integrity and reliability of the data before proceeding with further analysis.
+
+\begin{itemize}
+
+     \item \textbf{Missing Values:}
+     
+     \begin{itemize}
+        \item \textit{Column with empty values:} One of the first steps is to remove the \texttt{Code} column, as it contains many empty and missing values that do not provide useful information for the analysis. It is completely removed to reduce noise and simplify the data.
+    
+        \item \textit{Dataset with unrealistic data:} In dataset 4, many zero values are recorded in the prevalence columns of mental disorders. However, in reality, this rate is rarely exactly zero; the zero values here reflect the lack of original data or incomplete reporting, not the actual rate.
+    \end{itemize}
+    
+    \item \textbf{Outlier Treatment:}
+    
+        \begin{itemize}
+            \item \textit{Interquartile Range (IQR) Method:} Values outside the range
+             \[
+             Q_1 - 1.5 \times \text{IQR} \text{ to } Q_3 + 1.5 \times \text{IQR} 
+             \] 
+             are considered outliers and are limited to the boundary value. This method helps to "flatten" unusual data points without distorting the overall distribution of the data.
+            
+            \item \textit{Z-score Method:} This method normalizes the data and removes values with a Z-score greater than ±3, corresponding to 99.7 percent of data values in the normal distribution. This allows for an effective comparison of the two outlier handling techniques.
+        \end{itemize}
+        
+    After applying the above methods, the box plots before and after processing show that the data have been adjusted to remove outliers. In particular, the removal of outliers does not significantly affect the mean values of the variables, which shows that extreme values do not overly skew the data distribution , and the post-processed data still retain its representativeness for the entire data set.
+    
+\end{itemize}
+
+\subsection {Bivariate and Multivariate Analysis}
+    
+    The bivariate and multivariate analysis in this study focused on exploring the association between different types of mental disorders using two main data sets: data set 1 (population prevalence of each disorder) and data set 2 (burden of disease (DALY) caused by those disorders).
+
+    The two main quantitative analysis tools used:
+
+    \begin{itemize}
+        \item \textbf{Correlation Matrix:} Calculated using Pearson's coefficient, the correlation matrix reflects the degree of linear association between variables. Strong correlation values $|r| \geq 0.5$ are marked. The analysis results showed that pairs of disorders, such as anxiety disorders and depression, or eating disorders and bipolar disorder, were relatively highly correlated. This suggests that comorbidity is common in mental disorders, where one disorder may accompany or lead to another.
+        
+        \item \textbf{Covariance Matrix:} Complementary to correlation analysis, covariance shows the direction of covariance between two variables. Positive covariance values reinforce the positive association between disorders, which is particularly evident in dataset 2, where DALYs from disorders show a trend of increasing covariance.
+    \end{itemize}
+    
+    Additionally, pairs of strongly correlated variables are extracted and displayed in a tabular format, facilitating the clear identification of relationships that should be considered in potential predictive models or when assessing the social impact of each disorder.
+
+\textbf{
+\subsubsection{{Additional Bivariate and Multivariate Analysis}}
+}
+Digging deeper into mental disorder associations, this section focuses on analyzing the relationship between mental health outcomes and healthcare accessibility. Specifically, we examined data from the mental health prevalence dataset alongside the Universal Health Coverage (UHC) service coverage index dataset(Prebys Foundation, n.d.). 
+
+
+
+\subsection {Data Visualization}
+    
+     Data visualization is a core component of exploratory analysis and is particularly useful in identifying patterns and relationships within the two main datasets of the study.
+    
+    The  main visualizations used are:
+
+    \begin{itemize}
+        \item \textbf{Box plots:} Applied to each variable in both datasets to detect outliers before and after processing using the IQR and Z-score methods. Box plots not only help clarify the range of data distribution but also allow for a direct assessment of the impact of outliers on the stability of the data.
+    
+        \item \textbf{Heatmap:} A heatmap from the correlation and covariance matrices helps identify notable associations between disorders quickly. The colors in the plot represent the strength of the correlation, ranging from weak to strong, thereby providing a visual representation of the data's relationship structure. In dataset 1, the heatmap clearly shows that the prevalence of disorders such as anxiety, depression, and eating disorders tend to increase together over time or across geographic regions. Similarly, dataset 2 shows that the burden of disease due to these disorders also tends to fluctuate concurrently.
+
+\item \textbf{Scatterplots}: Scatterplots were used to examine the relationship between the Universal Health Coverage (UHC) Index and depression rates across countries and over time. Regression lines were added to these plots to illustrate trends clearly. Additionally, key countries such as the United States and Sweden were highlighted with distinct markers and labels to emphasize differences and outliers. These visualizations helped to communicate the findings clearly and supported interpretation of the statistical results(Prebys Foundation, n.d.).
+
+     \end{itemize}
+     
+    Overall, the combination of these visualization tools not only helps analysts better understand the data but also effectively communicates the results to non-technical readers. The graphs helped to identify potential relationships between mental disorders early on, which are often difficult to demonstrate with raw data tables.
+
+\subsection{Train-Test Split}
+
+Train-Test Split is applied consistently to all models to evaluate the generalization ability when predicting unseen data.
+
+\textbf{Data Split:} The dataset is split into two parts: \textbf{80\% for training} and \textbf{20\% for testing}, specifically:
+\begin{itemize}
+    \item X\_train: (5136, 4)
+    \item X\_test: (1284, 4)
+    \item y\_train: (5136,)
+    \item y\_test: (1284,)
+\end{itemize}
+
+This split method ensures that the training data is sufficiently large for the model to learn effectively while maintaining an independent test set to evaluate generalization after training.
+\begin{itemize}
+\item Train set: Used to train the model to learn the relationships between independent and dependent variables.
+\item Test set: Used only to predict and evaluate the accuracy of the model on new data.
+\end{itemize}
+
+Models applying train-test split:
+\begin{itemize}
+\item GLM (Generalized Linear Model): Apply train-test split and use $R^2$, MSE and 95\% confidence interval for evaluation. No statistical comparison test is performed because this is the reference model.
+\item K-Nearest Neighbors Regressor (KNN): Trained on the train set and evaluated on the test set. Then, compared with the GLM model using p-value test, the result is p = 0.393, which means there is no statistically significant difference.
+\item Neural Network (MLP Regressor): After splitting the data, the model is trained with early stopping to avoid overfitting. Accuracy was assessed using $R^2$, MSE, and p-value vs. GLM (p < 0.001), demonstrating that this model is a significant improvement.
+\item Random Forest Regressor: Also used train-test split and gave a very high $R^2$. However, the p-value test with the GLM model yielded p = 0.241, indicating insufficient statistical evidence to conclude that the model is better.
+\item Support Vector Regressor (SVR): This model was assessed similarly with a very small p-value ($1.17 \times 10^{-35}$), demonstrating a significant improvement over the linear model.
+\end{itemize}
+
+Splitting the data into training and testing sets plays an important role in ensuring objectivity when evaluating the model. This method helps avoid \textbf{overfitting} and allows fair comparison between different models. In addition, train-test split also helps verify the level of model improvement through metrics such as $R^2$, MSE, and especially the \textbf{p-value}, thereby objectively evaluating the effectiveness and generalization ability of the model.

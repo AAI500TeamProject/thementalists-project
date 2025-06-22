@@ -1,0 +1,86 @@
+\section{Results – Model Analysis}
+\label{sec:results}
+
+\textbf{Linear regression} analysis result showed that all three psychiatric disorders, bipolar disorder, anxiety disorder, and schizophrenia, had a positive linear relationship with the prevalence of eating disorders. Among them, bipolar disorder showed the strongest predictive power with a coefficient of $R^2$=0.46, followed by anxiety disorder (0.35) and schizophrenia disorder (0.25). Despite the different levels of association, all three models had a low mean square error (MSE) of only 0.01, indicating that the model had high predictive accuracy when using standardized data. These results confirm that psychiatric disorders, especially bipolar disorder, are important predictors of eating disorder prevalence in the population.
+
+Table~\ref{tab:model_results} shows evaluation metrics for five regression models: GLM, K-Nearest Neighbors, Neural Network, Random Forest, and Support Vector Regressor. For each model we calculate $R^2$ and mean squared error (MSE) scores for train and test predictions. We also calculate a 95\% confidence intervals (CI) for the test $R^2$ score where applicable, and $p$-values highlighting the differences in performance relative to the Random Forest Regressor.
+
+The \textbf{Generalized Linear Model} using a train-test split indicates that all mental health disorders analyzed have a statistically significant impact on eating disorders:
+\begin{itemize}
+    \item \textbf{Bipolar disorder} shows the strongest effect, with a coefficient of +0.4156,
+    \item \textbf{Schizophrenia disorder} follows closely with a strong positive effect of +0.3912,
+    \item \textbf{Anxiety disorder} has a moderate positive effect (+0.1312),
+    \item \textbf{Depression disorder} also contributes positively, though the effect is smaller (+0.0346).
+\end{itemize}
+All predictor variables had significant effects on eating disorders, and it was concluded that these disorders can predict the prevalence of eating disorders.The $R^2$ value on the test set was 0.68, and on the training set was 0.65, indicating that the model has strong explanatory power. The 95 percent confidence interval on the test set was between (0.6526 and 0.7017), indicating the high stability of the model. The mean square error (MSE) was 0.0006 on the training set and 0.00064 on the test set, indicating that the model predicted accurately and with slight bias.
+
+The \textbf{Random Forest Regressor} was the best overall performing model and achieved the highest test $R^2$ score (0.9950) and the lowest test MSE (0.000101). Its 95\% confidence interval for the test $R^2$ \([0.9908, 0.9984]\) was also the tightest amoung all models (this result strongly indicates consistent generalization).
+
+The \textbf{K-Nearest Neighbors Regressor} also performed well and achieved a test $R^2$ of 0.9893 and a narrow confidence interval \([0.9793, 0.9966]\), showing reliable generalization. 
+
+The \textbf{Neural Network} model yielded a test $R^2$ of 0.9156 and a test MSE of 0.001686. While this performance was weaker than the tree-based models, it was run for 100 iterations and demonstrated reasonable accuracy. The $p$-value ($2.18 \times 10^{-11}$) indicates a statistically significant difference in the performance relative to the  Random Forest regressor model.
+
+The \textbf{Support Vector Regressor} showed the lowest predictive performance with a test $R^2$ of 0.8037 and a test MSE of 0.003922. Furthermore the confidence interval \([0.7742, 0.8295]\) showed the model had a lower stability and accuracy.
+
+\begin{table}[h!]
+\centering
+\caption{Model Evaluation Metrics with Confidence Intervals and Significance Testing}
+\label{tab:model_results}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Model} & $R^2_{\text{train}}$ & $R^2_{\text{test}}$ & 95\% CI & MSE$_{\text{train}}$ & MSE$_{\text{test}}$ & $p$-value \\
+\midrule
+GLM & 0.65 & 0.68 & [0.653, 0.702] & 0.0067 &  0.0064 & -- \\
+K-Nearest Neighbors & 0.9952 & 0.9893 & [0.9793, 0.9966] & 9.1e-05 & 2.1e-04 & -- \\
+Neural Network & 0.9286 & 0.9156 & -- & 1.4e-03 & 1.7e-03 & 2.18e-11 \\
+\textbf{Random Forest} & \textbf{0.9995} & \textbf{0.9950} & [\textbf{0.9908}, \textbf{0.9984}] & \textbf{1.0e-05} & \textbf{1.0e-04} & \textbf{6.05e-03} \\
+Support Vector Regressor & 0.8016 & 0.8037 & [0.7742, 0.8295] & 3.8e-03 & 3.9e-03 & < 1e-40 \\
+GLM & - & 0.085 & - & < mse & < mse & < 0.001 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In summary: as shown in Table~\ref{tab:model_results}, the \textbf{Random Forest Regressor} achieves the highest performance, with the lowest test MSE (0.000101) and the highest test $R^2$ (0.9950). 
+This on the surface indicates good generalization ability. The \textbf{K-Nearest Neighbors Regressor} also performs well, albeit with a slightly higher test MSE error. The neural network model showed some larger MSE and could benefit from larger number of iterations or alternative network architecture (which we will leave to future work).
+
+\subsection{Relationship between the quality of healthcare
+measured by the Universal Health Coverage (UHC) Index and Depression across countries}
+
+\begin{table}[h!]
+\centering
+\caption{Yearly Correlation and Regression Results for UHC and Depression Rates}
+\label{tab:uhc_depression_results}
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Year} & \textbf{Pearson $r$} & \textbf{$p$-value} & \textbf{95\% CI for $r$} & \textbf{Regression Slope ($\beta$)} & \textbf{95\% CI for $\beta$} & \textbf{$R^2$} \\
+\hline
+2000 & -0.32 & $<.001$ & -- & -0.0151 & [$-0.022$, $-0.008$] & 0.104 \\
+2005 & -0.37 & $<.001$ & -- & -0.0165 & [$-0.023$, $-0.010$] & 0.135 \\
+2010 & -0.40 & $<.001$ & -- & -0.0198 & [$-0.027$, $-0.013$] & 0.163 \\
+2015 & -0.45 & $<.001$ & -- & -0.0221 & [$-0.029$, $-0.015$] & 0.205 \\
+2017 & -0.45 & $<.001$ & -- & -0.0224 & [$-0.029$, $-0.016$] & 0.200 \\
+2019 & -0.46 & $<.001$ & -- & -0.0228 & [$-0.030$, $-0.016$] & 0.208 \\
+\textbf{Overall} & \textbf{-0.41} & \textbf{$<.001$} & \textbf{[$-0.53$, $-0.28$]} & -- & -- & -- \\
+\hline
+\end{tabular}
+\end{table}
+
+Table \ref{tab:uhc_depression_results} presents a comprehensive analysis of annual data from 2000 to 2019, highlighting Pearson correlation coefficients, regression slopes, and $R^2$ values that investigate the relationship between the Universal Health Coverage (UHC) Index and rates of depression across various countries. The analysis reveals that, in each year examined, higher UHC scores correlate with lower national depression rates. The negative regression coefficients indicate that increases in health coverage are consistently associated with modest yet significant decreases in the prevalence of depression. These findings provide robust evidence of a stable inverse relationship between access to healthcare and mental health outcomes on a global scale.
+
+\subsubsection{Case Study}
+\begin{table}
+\centering
+\caption{Comparison of Mean UHC Index and Depression Rates: United States and Sweden}
+\label{tab:mean_uhc}
+\begin{tabular}{|l |l |l|}\hline
+Country & Mean UHC Index & Mean Depression Rate (\%) \\\hline
+
+\textbf{Sweden} & 80.5 & 4.17 \\\hline
+\textbf{United States} & 83.0 & 4.43 \\\hline
+\textbf{Difference} & +2.5 & +0.27 \\ \hline
+
+\end{tabular}
+
+\end{table}
+
+Table \ref{tab:mean_uhc} presents the average UHC index and mean depression rates for the United States and Sweden. While the United States has a slightly higher UHC index, Sweden exhibits a lower average depression rate. This pattern suggests that, although broader health coverage is essential, additional factors, such as the quality of care, access to mental health services, and broader social support, likely contribute to national mental health outcomes.
